@@ -4,72 +4,74 @@ const moveEvent = touchEnabled() ? 'ontouchmove' : 'onmousemove';
 const $ = (elem) => document.querySelector(elem);
 const $$ = (elem) => document.querySelectorAll(elem);
 
-const canvas_1 = $("#container-1");
-const ctx_1 = canvas_1.getContext('2d');
-const w_1 = canvas_1.width;
-const h_1 = canvas_1.height;
-
-const canvas_2 = $("#container-2");
-const ctx_2 = canvas_2.getContext('2d');
-const w_2 = canvas_2.width;
-const h_2 = canvas_2.height;
-
-const canvas_3 = $("#container-3");
-const ctx_3 = canvas_3.getContext('2d');
-const w_3 = canvas_3.width;
-const h_3 = canvas_3.height;
-
-const canvas_4 = $("#container-4");
-const ctx_4 = canvas_4.getContext('2d');
-const w_4 = canvas_4.width;
-const h_4 = canvas_4.height;
-
-const lineWidth = 1;
+const lineWidth = 3;
 const lineCap = 'butt';
+const colour = 'black';
+
+class Mesh {
+  constructor(id, lineWidth, lineCap, colour) {
+    const $ = (elem) => document.querySelector(elem);
+    this.rect = $(id).getBoundingClientRect();
+    this.ctx = $(id).getContext('2d');
+    this.width = $(id).width;
+    this.height = $(id).height;
+    this.lineWidth = lineWidth;
+    this.lineCap = lineCap;
+    this.colour = colour;
+    console.log(this.rect.left, this.rect.top)
+  }
+  drawLine({start_x, start_y}, {end_x, end_y}) {
+    this.ctx.beginPath();
+    this.ctx.moveTo(start_x, start_y);
+    this.ctx.lineTo(end_x, end_y);
+    this.ctx.closePath();
+    this.ctx.lineWidth = this.lineWidth;
+    this.ctx.lineCap = this.lineCap;
+    this.ctx.strokeStyle = this.colour;
+    this.ctx.globalAlpha = 0.05;
+    this.ctx.stroke();
+  }
+  drawMesh(x, y) {
+    this.drawLine(
+      {start_x: this.rect.left, start_y:this.rect.top}, 
+      {end_x:x - this.rect.left, end_y:y - this.rect.top}
+    );
+    // this.drawLine(
+    //   {start_x: this.rect.left, start_y:this.rect.top + this.height}, 
+    //   {end_x:this.rect.left + x, end_y:this.rect.top + y + this.height}
+    // );
+    // this.drawLine(
+    //   {start_x: this.rect.left + this.width, start_y:this.rect.top + this.height}, 
+    //   {end_x:this.rect.left + x+ this.width, end_y: this.rect.top + y + this.height}
+    // );
+    // this.drawLine(
+    //   {start_x: this.rect.left + this.width, start_y:this.rect.top + this.height}, 
+    //   {end_x:x, end_y:y}
+    // );
+  }
+}
+
+const m_1 = new Mesh('#container-1', lineWidth, lineCap, colour);
+const m_2 = new Mesh('#container-2', lineWidth, lineCap, colour);
+const m_3 = new Mesh('#container-3', lineWidth, lineCap, colour);
+const m_4 = new Mesh('#container-4', lineWidth, lineCap, colour);
+const m_5 = new Mesh('#container-5', lineWidth, lineCap, colour);
+const m_6 = new Mesh('#container-6', lineWidth, lineCap, colour);
+const m_7 = new Mesh('#container-7', lineWidth, lineCap, colour);
+const m_8 = new Mesh('#container-8', lineWidth, lineCap, colour);
+const m_9 = new Mesh('#container-9', lineWidth, lineCap, colour);
 
 document[moveEvent] = (event) => {
   const evt = touchEnabled() ? event.touches[0] : event;
   const x = evt.clientX;
   const y = evt.clientY;
-
-  drawLine(ctx_1, new Point(0, 0), new Point(x, y), 'red');
-  drawLine(ctx_1, new Point(0, h_1), new Point(x, y), 'orange');
-  drawLine(ctx_1, new Point(w_1, 0), new Point(x, y), 'yellow');
-  drawLine(ctx_1, new Point(w_1, h_1), new Point(x, y), 'pink');
-  
-  drawLine(ctx_2, new Point(0, 0), new Point(x, y), 'red');
-  drawLine(ctx_2, new Point(0, h_2), new Point(x, y), 'orange');
-  drawLine(ctx_2, new Point(w_2, 0), new Point(x, y), 'yellow');
-  drawLine(ctx_2, new Point(w_2, h_2), new Point(x, y), 'pink');
-
-  drawLine(ctx_3, new Point(0, 0), new Point(x, y), 'red');
-  drawLine(ctx_3, new Point(0, h_3), new Point(x, y), 'orange');
-  drawLine(ctx_3, new Point(w_3, 0), new Point(x, y), 'yellow');
-  drawLine(ctx_3, new Point(w_3, h_3), new Point(x, y), 'pink');
-
-  drawLine(ctx_4, new Point(0, 0), new Point(x, y), 'red');
-  drawLine(ctx_4, new Point(0, h_4), new Point(x, y), 'orange');
-  drawLine(ctx_4, new Point(w_4, 0), new Point(x, y), 'yellow');
-  drawLine(ctx_4, new Point(w_4, h_4), new Point(x, y), 'pink');
+  m_1.drawMesh(x, y);
+  m_2.drawMesh(x, y);
+  m_3.drawMesh(x, y);
+  m_4.drawMesh(x, y);
+  m_5.drawMesh(x, y);
+  m_6.drawMesh(x, y);
+  m_7.drawMesh(x, y);
+  m_8.drawMesh(x, y);
+  m_9.drawMesh(x, y);
 }
-
-class Point {
-  constructor(x, y) {
-    this.x = x - 10;
-    this.y = y - 10;
-  }
-}
-
-const drawLine = (ctx, start, end, color) => {
-  ctx.beginPath();
-  ctx.moveTo(start.x, start.y);
-  ctx.lineTo(end.x, end.y);
-  ctx.closePath();
-  ctx.lineWidth = lineWidth;
-  ctx.lineCap = lineCap;
-  ctx.strokeStyle = 'black';
-  ctx.globalAlpha = 0.1;
-  ctx.stroke();
-}
-
-

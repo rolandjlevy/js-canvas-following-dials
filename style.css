@@ -1,0 +1,9 @@
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 620px;
+}
+
+canvas {
+  border:1px solid #d3d3d3;
+}
