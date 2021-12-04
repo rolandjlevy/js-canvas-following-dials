@@ -7,13 +7,14 @@ const $$ = (elem) => document.querySelectorAll(elem);
 const lineWidth = 2;
 const lineCap = 'butt';
 const mode = 'colours'; // colours or bw
+let x, y;
 
 class Mesh {
   constructor(id, lineWidth, lineCap, colour) {
     const $ = (elem) => document.querySelector(elem);
     this.id = id;
-    this.rect = $(id).getBoundingClientRect();
     this.ctx = $(id).getContext('2d');
+    this.rect = $(id).getBoundingClientRect();
     this.width = $(id).width;
     this.height = $(id).height;
     this.lineWidth = lineWidth;
@@ -32,17 +33,16 @@ class Mesh {
     this.ctx.stroke();
   }
   drawMesh(x, y) {
-    const mousePos = {end_x:x - this.rect.left, end_y:y - this.rect.top};
-    this.drawLine( {start_x: 0, start_y:0}, mousePos );
-    this.drawLine( {start_x: this.width, start_y:0}, mousePos );
-    this.drawLine( {start_x: 0, start_y:this.height}, mousePos );
-    this.drawLine( {start_x: this.width, start_y:this.height}, mousePos );
+    this.mousePos = {end_x:x - this.rect.left, end_y:y - this.rect.top};
+    this.drawLine( {start_x: 0, start_y:0}, this.mousePos );
+    this.drawLine( {start_x: this.width, start_y:0}, this.mousePos );
+    this.drawLine( {start_x: 0, start_y:this.height}, this.mousePos );
+    this.drawLine( {start_x: this.width, start_y:this.height}, this.mousePos );
   }  
   updateSize(w, h) {
     this.width = w;
     this.height = h;
     this.rect = $(this.id).getBoundingClientRect();
-    // console.log(this.width, this.width, this.rect);
   }
 }
 
@@ -58,14 +58,9 @@ const colours = [
   'darkmagenta'
 ];
 
-let screenWidth = window.innerWidth
-|| document.documentElement.clientWidth
-|| document.body.clientWidth;
-console.log({screenWidth})
+let screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
-let screenHeight = window.innerHeight
-|| document.documentElement.clientHeight
-|| document.body.clientHeight;
+let screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
 const meshes = new Object();
 
@@ -80,8 +75,8 @@ colours.forEach((col, index) => {
 
 document[moveEvent] = (event) => {
   const evt = touchEnabled() ? event.touches[0] : event;
-  const x = evt.clientX;
-  const y = evt.clientY;
+  x = evt.clientX;
+  y = evt.clientY;
   colours.forEach((col, index) => {
     meshes[`m_${col}`].drawMesh(x, y);
   });
