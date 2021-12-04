@@ -4,9 +4,14 @@ const moveEvent = touchEnabled() ? 'ontouchmove' : 'onmousemove';
 const $ = (elem) => document.querySelector(elem);
 const $$ = (elem) => document.querySelectorAll(elem);
 
-const lineWidth = 2;
 const lineCap = 'butt';
 const mode = 'colours'; // colours or bw
+
+let screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+let screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+const lineWidth = () => Math.max(screenHeight, screenHeight) / 150;
 let x, y;
 
 class Mesh {
@@ -17,7 +22,7 @@ class Mesh {
     this.rect = $(id).getBoundingClientRect();
     this.width = $(id).width;
     this.height = $(id).height;
-    this.lineWidth = lineWidth;
+    this.lineWidth = lineWidth();
     this.lineCap = lineCap;
     this.colour = mode === 'colours' ? colour : 'white';
   }
@@ -26,7 +31,7 @@ class Mesh {
     this.ctx.moveTo(start_x, start_y);
     this.ctx.lineTo(end_x, end_y);
     this.ctx.closePath();
-    this.ctx.lineWidth = this.lineWidth;
+    this.ctx.lineWidth = lineWidth();
     this.ctx.lineCap = this.lineCap;
     this.ctx.strokeStyle = this.colour;
     this.ctx.globalAlpha = 0.05;
@@ -47,20 +52,16 @@ class Mesh {
 }
 
 const colours = [
+  'darkmagenta',
   'crimson',
-  'orangered',
-  'orange',
+  'tomato',
   'gold',
   'yellowgreen',
-  'seagreen',
-  'royalblue',
-  'indigo',
-  'darkmagenta'
+  'springgreen',
+  'darkturquoise',
+  'dodgerblue',
+  'mediumslateblue'
 ];
-
-let screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-
-let screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
 const meshes = new Object();
 
